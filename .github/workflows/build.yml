@@ -1,0 +1,47 @@
+name: Example Sxolar Run
+on:
+# Uncomment the below to also run on pushes, as a way to test
+#  push:
+#      branches:
+#      - main
+  schedule:
+    # Run Weekly on Sunday at 8am EST (1pm UTC)
+    # For more detail on cron syntax, see https://crontab.guru/
+    - cron: '0 13 * * 0'
+
+jobs:
+  MySummary:
+    # Setup the minimal environment: linux and python 3.11
+    name: UNIX Build (${{ matrix.python-version }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash -l {0}
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        os: [ "ubuntu-latest" ]
+        python-version: [ "3.11" ]
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      # Install the necessary dependencies (sxolar)
+      - name: Install sxolar
+        run: |
+          pip install sxolar
+
+      # Run the summary using the command line and config file
+      - name: Run GWaves
+        run: |
+          sxolar summary --config configs/gwaves.yml \
+            --name GWaves \
+            --email-to myrecipient@gmail.com \
+            --email-from myemail@gmail.com \
+            --email-subject "Sxolar Weekly Digest: GWwaves" \
+            --gmail-app-password "${{ secrets.SXOLARGMAILAPPPASSWORD }}" \
+            --output email

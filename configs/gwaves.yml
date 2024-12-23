@@ -1,0 +1,14 @@
+GWaves:
+  - name: "LIGO / VIRGO Papers Past Month"
+    authors: [
+      "The LIGO Scientific Collaboration",
+      "The Virgo Collaboration",
+    ]
+    filter_authors: True
+    # Set the maximum number of results to 1000 to ensure we
+    # get a large enough sample of papers such that some are
+    # from the past 4 weeks
+    max_results: 1000
+    trailing:
+      num: 4
+      unit: "weeks"
